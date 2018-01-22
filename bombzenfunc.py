@@ -197,14 +197,12 @@ def debilinear_lanczos(clip: vs.VideoNode, width=None, height=None, scale_to_444
         width = clip.width
     if height == None:
         height = clip.height
-    chroma_width = width if scale_to_444 else width // 2
-    chroma_height = height if scale_to_444 else height // 2
-    planes = clip_to_plane_array(clip)
-    luma_plane = kageru.inverse_scale(planes[0], width=width, height=height, mask_detail=mask_detail, mask_threshold=mask_threshold, show_mask=show_mask)
+    dest_format = get_format(clip, subsampling=(False if scale_to_444 else True))
+    luma_plane = kageru.inverse_scale(getY(clip), width=width, height=height, mask_detail=mask_detail, mask_threshold=mask_threshold, show_mask=show_mask)
     if mask_detail and show_mask:
         return luma_plane
-    chroma_planes = [plane.resize.Lanczos(width=chroma_width, height=chroma_height) for plane in planes[1:]]
-    return plane_replace(luma_plane, chroma_planes, planeshift=1)
+    chromaclip = clip.resize.Lanczos(width=width, height=height, format=dest_format)
+    return plane_replace(luma_plane, chromaclip, planes=[1, 2])
 
 # requires 32-bit precision
 # noise_level above 1 is highly discouraged
