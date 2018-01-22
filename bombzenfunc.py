@@ -1,6 +1,7 @@
 import vapoursynth as vs
 import edi_rpow2
 import chromeo
+import dhh
 import kagefunc as kageru
 import mvsfunc as mvf
 import havsfunc as haf
