@@ -182,7 +182,7 @@ def debilinear_reconstruct(clip: vs.VideoNode, width=None, height=None, mask_det
 # and downscale or upscale the chroma with Lanczos
 # default is 4:4:4 but you can set chroma_width and chroma_height to be half as well
 def debilinear_lanczos(clip: vs.VideoNode, width=None, height=None, scale_to_444=True, mask_detail=True, mask_threshold=0.05, show_mask=False) -> vs.VideoNode:
-	if width == None:
+    if width == None:
         width = clip.width
     if height == None:
         height = clip.height
@@ -260,7 +260,7 @@ def _dehalo0(clip: vs.VideoNode, dehalo_radius, mask, darkstr, brightstr) -> vs.
     if mask == None:
         return dehalo_clip
     else:
-    	# In case there's chroma subsampling we have to Spline36 it
+        # In case there's chroma subsampling we have to Spline36 it
         return core.std.MaskedMerge(clip, dehalo_clip, mask.resize.Spline36(width=clip.width, height=clip.height))
 
 # Plane-selection-friendly masking dehalo wrapper
@@ -279,7 +279,7 @@ def dehalo(clip: vs.VideoNode, mask_radius=2, dehalo_radius=2, show_mask=False, 
 # I wrote this one myself, so no promises that it's any good, since I'm basically a noob
 # It's based on a combination of an unsharp and a selective gaussian blur to smooth out extra crud created by the sharpen
 def sharpen(clip: vs.VideoNode, matrix_size=5, strength=0.35, planes=None):
-	# Construct a blurred version of the clip
+    # Construct a blurred version of the clip
     blurred = gaussian_blur(clip, matrix_size=matrix_size, planes=planes)
     # Subtract off a fraction of it to create an unsharped clip
     unsharped = core.std.Expr(clips=[clip, blurred], expr='x y - ' + str(strength) + ' * x +')
