@@ -101,12 +101,23 @@ def get_format(clip_or_format) -> vs.Format:
 
 # Slightly more convenient format.replace()
 # since we can pass it a clip
+# 
+# colorfamily: consants from vs
+# bits: an integer between 8 and 16 (inclusive), or 32.
+# subsampling: boolean flag; True for 4:2:0, False for 4:4:4
 def create_new_format(clip_or_format, colorfamily=None, bits=None, subsampling=None) -> vs.Format:
     src = get_format(clip_or_format)
     colorfamily = src.color_family if colorfamily == None else colorfamily
     bits = src.bits if bits == None else bits
-    subsampling_w = src.subsampling_w if subsampling == None else subsampling
-    subsampling_h = src.subsampling_h if subsampling == None else subsampling
+    if subsampling == None:
+        subsampling_w = src.subsampling_w
+        subsampling_h = src.subsampling_h
+    elif subsampling:
+        subsampling_w = 1
+        subsampling_h = 1
+    else:
+        subsampling_w = 0
+        subsampling_h = 0
     sample_type = vs.INTEGER if bits < 32 else vs.FLOAT
     return core.register_format(colorfamily, sample_type, bits, subsampling_w, subsampling_h)
 
